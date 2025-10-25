@@ -1,0 +1,36 @@
+# Minimal .gitignore for this CMake/OpenGL project
+
+# IDE/editor
+.vscode/
+.idea/
+*.code-workspace
+
+# CMake build outputs
+build/
+build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+Testing/
+_deps/
+install_manifest.txt
+Makefile
+*.make
+*.ninja
+*.dir/
+compile_commands.json
+*.cmake
+
+# Binary artifacts
+*.exe
+*.dll
+*.lib
+*.a
+*.pdb
+*.obj
+*.o
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
