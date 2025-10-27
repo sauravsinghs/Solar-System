@@ -27,7 +27,15 @@ Planned additions for the next milestone:
 
 ## Controls
 
-![Keyboard controls](Resources/keyboard.png)
+- Camera movement: W / A / S / D
+- Move camera up: E
+- Move camera down: Q
+- Speed up camera: V
+- Slow down camera: C
+- Pause simulation: P
+- Speed up time: Numpad +
+- Slow down time: Numpad -
+- Exit: Esc
 
 ## The settings
 
