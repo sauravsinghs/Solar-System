@@ -1,3 +1,4 @@
+// Game: owns runtime resources, updates simulation, and renders each frame.
 #include "Game.h"
 #include "Settings.h"
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,30 +16,24 @@ Game::Game(int windowWidth, int windowHeight, int viewportX, int viewportY, int 
     skyboxTexture(settings::texturesPath + "stars_milkyway.jpg")
     
 {
+    // Initialize per-frame state and giant skybox sphere.
     lastMousePosition = window.GetMousePosition();
     lastTime = window.GetElapsedTime();
     skyBox.ApplyScale(glm::vec3{ settings::cameraFarPlaneDistance });
-    //Load the textures and initialize the planets.
-    // Include Sun, Earth, Mars only
+    // Load textures and set up planets (minimal: Sun, Earth, Mars).
     planetTextures.emplace_back(settings::texturesPath + "sun.jpg");
     planets.emplace_back(0.f, settings::sunScale, 0.f, settings::sunRotationSpeed);
     planetTextures.emplace_back(settings::texturesPath + "earth.jpg");
     planets.emplace_back(settings::earthOrbitRadius, settings::earthScale, settings::earthOrbitSpeed, settings::earthRotationSpeed);
     planetTextures.emplace_back(settings::texturesPath + "mars.jpg");
     planets.emplace_back(settings::marsOrbitRadius, settings::marsScale, settings::marsOrbitSpeed, settings::marsRotationSpeed);
-    //Setup the lighting in the shaders.
+    // Set up lighting uniforms once; updated viewPosition per-frame.
     window.UseShader(defaultShader);
     defaultShader.SendUniform<glm::vec3>("viewPosition", camera.GetPosition());
     
     defaultShader.SendUniform<glm::vec3>("lightPosition", { 0.0f,0.0f,0.0f });
     defaultShader.SendUniform<glm::vec3>("ambientColor", settings::ambientColor);
     defaultShader.SendUniform<glm::vec3>("sunlightColor", settings::sunlightColor);
-    // no advanced earth shader in minimal build
-    // no overlay shader in minimal build
-
-    // no ring mesh in minimal build
-
-    // no asteroid belt in minimal build
 }
 
 void Game::Tick()
@@ -48,7 +43,8 @@ void Game::Tick()
     float deltatime = now - lastTime;
     lastTime = now;
 
-    window.ClearBuffers();  //Clears the color and depth buffers.
+    // Clear buffers, update logic, draw, then present and process events.
+    window.ClearBuffers();  // Clears the color and depth buffers.
     Update(deltatime);
     Draw(deltatime);
     window.SwapBuffers();	//Swap the current buffer to display it.
@@ -62,18 +58,18 @@ bool Game::ShouldClose() const
 
 void Game::Update(float deltatime)
 {
-    //Logic update happens here.
-    //Check if window should be closed.
+    // Handle input and update simulation state.
+    // Check if window should be closed.
     if(window.IsKeyPressed(settings::exitKey))
     {
         window.Close();
     }
-    //Update camera rotation.
+    // Update camera rotation from mouse delta.
     glm::vec2 mousePosition = window.GetMousePosition();
     glm::vec2 cameraRotationOffset{mousePosition.x - lastMousePosition.x, lastMousePosition.y - mousePosition.y };
     lastMousePosition = mousePosition;
     camera.Rotate(cameraRotationOffset);
-    //Update camera position.
+    // Update camera position from WASD/QE.
     if (window.IsKeyPressed(settings::forwardKey))
         camera.Move(Camera::Movement::FORWARD, deltatime);
     if (window.IsKeyPressed(settings::backwardKey))
@@ -86,12 +82,12 @@ void Game::Update(float deltatime)
         camera.Move(Camera::Movement::UP, deltatime);
     if (window.IsKeyPressed(settings::downKey))
         camera.Move(Camera::Movement::DOWN, deltatime);
-    //Update wireframe mode.
+    // Toggle wireframe mode.
     if (window.IsKeyPressedOnce(settings::wireframeModeKey))
     {
         window.ToggleWireframe();
     }
-    //Update camera speed.
+    // Adjust camera movement speed.
     if (window.IsKeyPressed(settings::cameraSpeedupKey))
     {
         camera.AddMovementSpeed(settings::cameraSpeedupRate);
@@ -107,16 +103,13 @@ void Game::Update(float deltatime)
 
     if (!isPaused)
     {
-        // Advance shader animation time only when running
-        shaderTime += deltatime;
-        //Update the planets' transforms.
+        // Update the planets' transforms.
         for (Planet& planet : planets)
         {
             planet.Update(deltatime * timeSpeed);
         }
-        // no moon or asteroids in minimal build
 
-        //Update the time speed.
+        // Update the time speed.
         if (window.IsKeyPressed(settings::timeSpeedupKey))
             timeSpeed += settings::timeAdjustSpeed;
         if (window.IsKeyPressed(settings::timeSlowdownKey))
@@ -126,23 +119,23 @@ void Game::Update(float deltatime)
 
 void Game::Draw(float deltatime)
 {
-    //Drawing happens here.
+    // Build camera matrices and draw scene objects.
     glm::mat4 projection = camera.GetPerspectiveMatrix();
     glm::mat4 viewMatrix = camera.GetViewMatrix();
-    //Draw the planets (except for the sun and the earth) using the default shader (normal lighting).
+    // Draw the planets (except for the sun and the earth) using the default shader (normal lighting).
     window.UseShader(defaultShader);
     defaultShader.SendUniform<glm::vec3>("viewPosition", camera.GetPosition());
-    // no animated uniforms in minimal build
+    
     for (size_t i = 2; i < planets.size(); ++i)
     {
-        // no flow uniform in minimal build
+        
         glm::mat4 model = planets[i].GetModelMatrix();
         defaultShader.SendUniform<glm::mat4>("MVP", projection * viewMatrix * model);
         defaultShader.SendUniform<glm::mat4>("modelMatrix", model);
         defaultShader.SendUniform<glm::mat3>("normalMatrix", planets[i].GetNormalMatrix());
         window.DrawActor(sphereMesh, planetTextures[i]);
     }
-    //Draw the earth using basic shader
+    // Draw the earth using basic shader.
     window.UseShader(defaultShader);
     defaultShader.SendUniform<glm::vec3>("viewPosition", camera.GetPosition());
     
@@ -155,29 +148,14 @@ void Game::Draw(float deltatime)
         window.DrawActor(sphereMesh, planetTextures[1]);
     }
 
-    // no Venus atmosphere in minimal build
-
-    // Saturn rings overlay using ring mesh and overlay shader
-    // no Saturn rings
-
-    // Uranus rings (thin, smaller, vertical alignment) using same ring mesh
-    // no Uranus rings
-
-    // Asteroid belt draw (after planets, before sun/skybox)
-    // no asteroid belt draw
-
-    // Moon: orbit Earth and stay tidally locked (same face toward Earth)
-    // no moon
-    // (cleanup) removed stray placeholder Venus code
-    //Draw the sun and the skybox without lighting.
     window.UseShader(noLightShader);
-    //Draw sun with no-light shader but animated UVs and brightness boost
+    // Draw sun (unlit/emissive) with slight brightness boost in fragment shader.
     window.UseShader(noLightShader);
     noLightShader.SendUniform<glm::mat4>("MVP", projection * viewMatrix * planets[0].GetModelMatrix());
     
     window.DrawActor(sphereMesh, planetTextures[0]);
-    //Draw skybox.
-    viewMatrix = glm::mat4(glm::mat3(viewMatrix));//Remove the translation from the view matrix, we do not want our skybox to move around.
+    // Draw skybox: remove camera translation so skybox appears infinitely far.
+    viewMatrix = glm::mat4(glm::mat3(viewMatrix));
     
     noLightShader.SendUniform<glm::mat4>("MVP", projection * viewMatrix * skyBox.GetModelMatrix());
     window.DrawActor(sphereMesh, skyboxTexture);

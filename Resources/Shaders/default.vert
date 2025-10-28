@@ -1,3 +1,4 @@
+// Default lit vertex shader: passes UV, world-space position, and transformed normal.
 #version 330 core
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexture;
@@ -7,9 +8,9 @@ out vec2 textureCoordinate;
 out vec3 normal;
 out vec3 fragmentPosition;
 
-uniform mat4 MVP;
-uniform mat4 modelMatrix;
-uniform mat3 normalMatrix;
+uniform mat4 MVP;          // projection * view * model
+uniform mat4 modelMatrix;  // model matrix for world position
+uniform mat3 normalMatrix; // inverse-transpose of upper-left of model
 
 void main()
 {

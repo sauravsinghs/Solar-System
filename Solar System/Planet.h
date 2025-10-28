@@ -12,10 +12,8 @@ public:
 	Planet(float orbitRadius, float scale, float orbitSpeedDegrees, float rotationSpeedDegrees);
 	void Update(float deltatime);
 public:
-	float GetOrbitDegrees() const;        // Current orbit angle in degrees
-	float GetRotationDegrees() const;     // Current self-rotation angle in degrees
-    float GetOrbitRadius() const { return orbitRadius; }
-    float GetScale() const { return scale; }
+    float GetOrbitDegrees() const;        // Current orbit angle in degrees
+    float GetRotationDegrees() const;     // Current self-rotation angle in degrees
 private:
 	const float orbitRadius;
 	const float scale;

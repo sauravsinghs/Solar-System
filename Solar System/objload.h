@@ -1,3 +1,4 @@
+// Minimal OBJ loader for positions/UVs/normals (triangle faces in v/vt/vn format).
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>

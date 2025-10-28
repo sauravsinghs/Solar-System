@@ -1,3 +1,4 @@
+// ShaderProgram: compiles vertex/fragment shaders, links program, sends uniforms.
 #include "ShaderProgram.h"
 #include <glad/glad.h>
 #include <string>

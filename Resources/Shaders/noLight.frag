@@ -1,3 +1,4 @@
+// Unlit fragment shader: samples texture and applies a small emissive boost (for sun).
 #version 330 core
 
 in vec2 textureCoordinate;
@@ -5,7 +6,6 @@ in vec2 textureCoordinate;
 out vec4 FragColor;
 
 uniform sampler2D textureSampler;
-uniform float timeSeconds;
 
 void main()
 {

@@ -1,3 +1,4 @@
+// Texture: loads image via stb_image and uploads to OpenGL with mipmaps.
 #include "Texture.h"
 #include "glad/glad.h"
 #include "stb_image.h"

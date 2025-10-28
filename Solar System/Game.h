@@ -8,7 +8,9 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include <vector>
-//A class that represents the game simulation and handles the logic/render loop.
+// Encapsulates simulation state and the render/update loop: creates window/context,
+// loads resources (shaders, meshes, textures), updates camera and planet orbits,
+// and issues draw calls each frame.
 class Game
 {
 public:
@@ -32,7 +34,6 @@ private:
     Texture skyboxTexture;
 	glm::vec2 lastMousePosition;
     float lastTime;
-    float shaderTime = 0.0f; // accumulates only when not paused for stable pause state
     float timeSpeed = 1.0f;
     bool isPaused = false;
 };

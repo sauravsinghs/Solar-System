@@ -1,3 +1,4 @@
+// Default lit fragment shader: ambient + diffuse + subtle rim, modulated by texture.
 #version 330 core
 
 in vec2 textureCoordinate;
@@ -6,11 +7,11 @@ in vec3 fragmentPosition;
 
 out vec4 FragColor;
 
-uniform vec3 ambientColor;
-uniform vec3 sunlightColor;
-uniform vec3 lightPosition;
+uniform vec3 ambientColor;     // scene ambient for planets
+uniform vec3 sunlightColor;    // white sunlight color
+uniform vec3 lightPosition;    // sun position in world
 uniform sampler2D textureSampler;
-uniform vec3 viewPosition;
+uniform vec3 viewPosition;     // camera position in world
 
 void main()
 {

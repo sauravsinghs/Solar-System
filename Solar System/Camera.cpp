@@ -1,3 +1,4 @@
+// Camera: builds view and perspective matrices; handles FPS-style movement and look.
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>

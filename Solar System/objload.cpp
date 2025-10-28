@@ -1,3 +1,4 @@
+// Very simple OBJ parser: reads vertices, uvs, normals and triangulated faces.
 #include <vector>
 #include <stdio.h>
 #include <string>

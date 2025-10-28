@@ -1,3 +1,4 @@
+// Actor: model matrix utilities for translation/rotation/scale and normal matrix.
 #include "Actor.h"
 #include <glm/gtc/matrix_transform.hpp>
 
