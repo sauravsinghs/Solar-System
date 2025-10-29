@@ -13,6 +13,7 @@ namespace {
 
 Mesh Mesh::GenerateIcoSphere(int subdivisions, float radius)
 {
+        // ye function ek perfect sphere banata hai using icosahedron subdivision
     // Icosahedron vertices
     const float t = (1.0f + sqrtf(5.0f)) * 0.5f;
     std::vector<glm::vec3> v = {
@@ -104,6 +105,7 @@ static float noise3D(const glm::vec3& p)
 
 Mesh Mesh::GenerateCraggyAsteroid(int subdivisions, float radius, float amplitude, float frequency, unsigned int seed)
 {
+    // This builds on the IcoSphere, but adds random noise to make the shape irregular.
     Mesh base = GenerateIcoSphere(subdivisions, 1.0f);
     // Read back from base mesh buffers via temporary vectors used to construct Mesh
     // We don't have direct access; regenerate positions/normals similarly to GenerateIcoSphere

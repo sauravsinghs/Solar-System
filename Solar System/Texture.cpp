@@ -3,7 +3,7 @@
 #include "stb_image.h"
 #include <iostream>
 
-Texture::Texture(std::string texturePath)
+Texture::Texture(std::string texturePath)  // work as a contructor // texture load krta hai disk se
 {
     std::cout << "Loading texture: " << texturePath << "\n";
     //Create a texture buffer.

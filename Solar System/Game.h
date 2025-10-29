@@ -15,24 +15,24 @@ public:
 	Game(int windowWidth, int windowHeight, int viewportX, int viewportY, int viewportWidth, int viewportHeight,
 		const std::string title, struct GLFWmonitor* monitor = nullptr, struct GLFWwindow* share = nullptr);
 	void Tick();				//Updates the game and draws a frame.
-	bool ShouldClose() const;	//Returns whether or not the window is flagged for closing.
-private:
+	bool ShouldClose() const;	// check that window is close or not
 	void Update(float deltatime);
 	void Draw(float deltatime);
 private:
 	Window window;	//Window must be constructed first, it initializes OpenGL context and GLFW window.
 private:
-    ShaderProgram defaultShader;
-    ShaderProgram noLightShader;
-	Camera camera;
-    Mesh sphereMesh;
-    std::vector<Texture> planetTextures;
-    std::vector<Planet> planets;
-    Actor skyBox;
-    Texture skyboxTexture;
+    ShaderProgram defaultShader; // planets ke liye 
+    ShaderProgram noLightShader;  // sun and skybox ke liye
+	Camera camera; // camera object controls the view and projection matrices
+
+    Mesh sphereMesh;  // 3d geometry for planets
+    std::vector<Texture> planetTextures; // textures for the planets
+    std::vector<Planet> planets; // planets in the solar system
+    Actor skyBox;  // skybox surrounding the scene
+    Texture skyboxTexture;  // starry background texture
 	glm::vec2 lastMousePosition;
     float lastTime;
-    float shaderTime = 0.0f; // accumulates only when not paused for stable pause state
+    float shaderTime = 0.0f; // Animation timing variable
     float timeSpeed = 1.0f;
-    bool isPaused = false;
+    bool isPaused = false;  // pause control
 };

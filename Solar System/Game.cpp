@@ -43,14 +43,15 @@ Game::Game(int windowWidth, int windowHeight, int viewportX, int viewportY, int 
 
 void Game::Tick()
 {
+    // ek full frame cycle 
     //Measure the time that has passed since the previous frame.
-    float now = window.GetElapsedTime();
-    float deltatime = now - lastTime;
+    float now = window.GetElapsedTime(); // current time calcutate kiya
+    float deltatime = now - lastTime;  // time difference between current and last frame
     lastTime = now;
 
     window.ClearBuffers();  //Clears the color and depth buffers.
-    Update(deltatime);
-    Draw(deltatime);
+    Update(deltatime);  // purane cheezo ko update karta hai 
+    Draw(deltatime);     // rendering karta hai
     window.SwapBuffers();	//Swap the current buffer to display it.
     window.PollEvents();    //Process the pending window events.
 }
@@ -66,14 +67,17 @@ void Game::Update(float deltatime)
     //Check if window should be closed.
     if(window.IsKeyPressed(settings::exitKey))
     {
+        // esc key window close kar deta hai
         window.Close();
     }
     //Update camera rotation.
+    // mouse movement ke according camera ko rotate karta hai
     glm::vec2 mousePosition = window.GetMousePosition();
     glm::vec2 cameraRotationOffset{mousePosition.x - lastMousePosition.x, lastMousePosition.y - mousePosition.y };
     lastMousePosition = mousePosition;
     camera.Rotate(cameraRotationOffset);
     //Update camera position.
+    // wasd + space /ctrl ke through camera move karta hai
     if (window.IsKeyPressed(settings::forwardKey))
         camera.Move(Camera::Movement::FORWARD, deltatime);
     if (window.IsKeyPressed(settings::backwardKey))
@@ -107,6 +111,8 @@ void Game::Update(float deltatime)
 
     if (!isPaused)
     {
+        // each planet update its own orbits and rotations
+        // using its own update method
         // Advance shader animation time only when running
         shaderTime += deltatime;
         //Update the planets' transforms.
@@ -136,8 +142,9 @@ void Game::Draw(float deltatime)
     for (size_t i = 2; i < planets.size(); ++i)
     {
         // no flow uniform in minimal build
-        glm::mat4 model = planets[i].GetModelMatrix();
-        defaultShader.SendUniform<glm::mat4>("MVP", projection * viewMatrix * model);
+        // this is for mars texture animation
+        glm::mat4 model = planets[i].GetModelMatrix();  // it get model matrix from actor 
+        defaultShader.SendUniform<glm::mat4>("MVP", projection * viewMatrix * model);  // object model ke baad world  mein mvp banta hai 
         defaultShader.SendUniform<glm::mat4>("modelMatrix", model);
         defaultShader.SendUniform<glm::mat3>("normalMatrix", planets[i].GetNormalMatrix());
         window.DrawActor(sphereMesh, planetTextures[i]);

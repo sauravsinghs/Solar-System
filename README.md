@@ -142,3 +142,6 @@ rmdir /S /Q build     # Windows
 Planet textures were retrieved from https://www.solarsystemscope.com/textures/
 
 An OpenGL resource that greatly helped : https://learnopengl.com/
+
+
+Start-Process -FilePath ".\Solar System\Solar System.exe" -WorkingDirectory (Get-Location)

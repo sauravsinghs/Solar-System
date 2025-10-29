@@ -19,6 +19,7 @@ ShaderProgram::ShaderProgram(std::string vertexShaderPath, std::string fragmentS
     vertexShaderFile.open(vertexShaderPath);
     fragmentShaderFile.open(fragmentShaderPath);
     std::stringstream vShaderStream, fShaderStream;
+    // phir file ka content string  mein load karta hai
     vShaderStream << vertexShaderFile.rdbuf();
     fShaderStream << fragmentShaderFile.rdbuf();
     vertexShaderFile.close();
@@ -70,6 +71,8 @@ ShaderProgram::ShaderProgram(std::string vertexShaderPath, std::string fragmentS
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 }
+
+// yahan destructor hai jo shader program ko delete karta hai
 
 ShaderProgram::~ShaderProgram() noexcept
 {

@@ -26,3 +26,4 @@ private:
 	unsigned int VBOTexture;
 	unsigned int VBONormals;
 };
+// mesh bas keval model ko dekha raha like planet ke models ko represent karta hai

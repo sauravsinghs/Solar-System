@@ -57,3 +57,4 @@ inline void ShaderProgram::SendUniform<float>(std::string uniformName, const flo
 {
 	glUniform1f(GetUniformID(uniformName), value);
 }
+//hgvhvj

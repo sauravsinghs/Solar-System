@@ -17,10 +17,10 @@ public:
     float GetOrbitRadius() const { return orbitRadius; }
     float GetScale() const { return scale; }
 private:
-	const float orbitRadius;
-	const float scale;
-	const float orbitSpeedDegrees;
-	const float rotationSpeedDegrees;
-	float currentOrbitDegrees = 0.f;
-	float currentRotationDegrees = 0.f;
+	const float orbitRadius; // distance from sun
+	const float scale; 	   // size of the planet
+	const float orbitSpeedDegrees; // speed of orbiting around sun
+	const float rotationSpeedDegrees; // speed of rotating around itself
+	float currentOrbitDegrees = 0.f; // current angle in orbit
+	float currentRotationDegrees = 0.f; // current angle of self rotation
 };
