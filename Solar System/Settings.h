@@ -19,39 +19,23 @@ namespace settings
 	constexpr float earthOrbitRadius = 300.0f;		//The radius of the earth around the sun (other planet's radiuses are scaled based on this value).
     
 	constexpr float marsOrbitRadius = earthOrbitRadius * 1.3f;
-	constexpr float jupiterOrbitRadius = earthOrbitRadius * 2.0f;
-	constexpr float saturnOrbitRadius = earthOrbitRadius * 3.0f;
-	constexpr float uranusOrbitRadius = earthOrbitRadius * 3.8f;
-	constexpr float neptuneOrbitRadius = earthOrbitRadius * 4.3f;
 
 	//Scales.
 	constexpr float sunScale = 100.f;				
 	constexpr float earthScale = 10.f;				//The scale of the earth (other planet's scales are adjusted based on this value).
     
 	constexpr float marsScale = earthScale * 0.5f;	
-	constexpr float jupiterScale = earthScale * 5.0f;
-	constexpr float saturnScale = earthScale * 4.0f;	
-	constexpr float uranusScale = earthScale * 2.5f;	
-	constexpr float neptuneScale = earthScale * 2.3f;
 
 	//Orbit speeds (in degrees per second).
 	constexpr float earthOrbitSpeed = 20.f;	//The number of degrees the earth should travel around its orbit every second (other planet's orbit speeds are adjusted based on this value).
     
 	constexpr float marsOrbitSpeed = earthOrbitSpeed * 0.531f;
-	constexpr float jupiterOrbitSpeed = earthOrbitSpeed * 0.084f;
-	constexpr float saturnOrbitSpeed = earthOrbitSpeed * 0.033f;
-	constexpr float uranusOrbitSpeed = earthOrbitSpeed * 0.011f;
-	constexpr float neptuneOrbitSpeed = earthOrbitSpeed * 0.006f;
 
 	//Rotation Speeds (in degrees per second).
 	constexpr float earthRotationSpeed = 50.f;
 	constexpr float sunRotationSpeed = earthRotationSpeed * 0.037f;	//The number of degrees the earth should rotate around itself every second (other planet's rotation speeds are adjusted based on this value).
     
 	constexpr float marsRotationSpeed = earthRotationSpeed * 0.960f;
-	constexpr float jupiterRotationSpeed = earthRotationSpeed * 2.403f;
-	constexpr float saturnRotationSpeed = earthRotationSpeed * 2.183f;
-	constexpr float uranusRotationSpeed = -earthRotationSpeed * 1.412f;	//Rotates the other way compared to earth.
-	constexpr float neptuneRotationSpeed = earthRotationSpeed * 1.501f;
 
 	//Time settings.
 	constexpr float timeAdjustSpeed = 0.1f;
