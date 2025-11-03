@@ -29,6 +29,7 @@ add_executable(solar_system
   "${SRC_DIR}/Actor.cpp"
   "${SRC_DIR}/Camera.cpp"
   "${SRC_DIR}/Game.cpp"
+  "${SRC_DIR}/Orbital.cpp"
   "${SRC_DIR}/main.cpp"
   "${SRC_DIR}/Mesh.cpp"
   "${SRC_DIR}/objload.cpp"

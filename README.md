@@ -1,92 +1,59 @@
 # Solar System
 
-Welcome to the Solar System Simulation! This project is a 3D simulation of the solar system using C++ and OpenGL.
+Interactive 3D solar system written in C++17 with OpenGL 3.3. Explore planets, toggle follow‑camera views, and visualize true inclined, elliptical orbits.
 
-## Features
+## Highlights
 
-- Accurate (relative to earth) representation of the day/night cycles of the planets in the solar system.
-- Free fly camera for exploring the solar system.
-- Ability to control the flow of time, stop it and even reverse it.
-- Wireframe view mode.
-- A plethora of tweakable settings to customize the experience.
-
-### Current scope (for mid evaluation)
-
-The project is minimal to reflect partial progress:
-
-- Sun, Earth, and Mars only
-- Basic lighting for all bodies (no advanced Earth shader)
-- No moon, asteroid belt, Venus atmosphere, or planetary rings
-
-Planned additions for the next milestone:
-
-- Earth advanced shader (day/night, clouds, specular)
-- Moon with tidally locked orbit around Earth
-- Asteroid belt between Mars and Jupiter
-- Venus atmosphere overlay; Saturn and Uranus rings
+- Keplerian orbits (J2000 elements) for Mercury → Neptune; follow‑camera (`F`) per body
+- Earth–Moon system integrated with a lightweight, stable N‑body (leapfrog)
+- Orbit guides (`O`) as inclined ellipses; Moon guide follows Earth
+- Per‑planet HUD (bottom‑left) with real‑world facts when follow‑camera is active
+- Atmosphere/ring overlays (Venus atmosphere, Saturn/Uranus rings)
+- Asteroid belt with thousands of instanced rocks between Mars and Jupiter
+- Time controls and pause; wireframe toggle; adjustable camera speed
 
 ## Controls
 
-- Camera movement: W / A / S / D
-- Move camera up: E
-- Move camera down: Q
-- Speed up camera: V
-- Slow down camera: C
-- Pause simulation: P
-- Speed up time: Numpad +
-- Slow down time: Numpad -
+- Camera: W / A / S / D
+- Up / Down: E / Q
+- Speed: V (faster) / C (slower)
+- Pause: P
+- Time ±: Numpad + / Numpad -
+- Follow camera cycle (planets → Moon → free): F
+- Orbit guides toggle: O
 - Exit: Esc
 
-## The settings
+## Simulation model
 
-Various options and preferences can be specified in the `settings.h` file.
-Such as :
+- Planets use analytic Kepler motion from approximate J2000 elements (semi‑major axis, eccentricity, inclination, Ω, ω, M0)
+- Axial tilt and self‑rotation applied per planet
+- Moon integrated in Earth’s local frame via leapfrog for stability
+- Visuals: inclined elliptical orbit paths, soft day/night terminator, ring/atmosphere overlays
 
-- Key bindings.
-- Planet positions, speeds, rotations and sizes.
-- Lighting color and intensity.
-- Time speeds.
-- Camera speed and mouse sensitivity.
-- Window and viewport settings.
+## Settings
 
-## The simulation
+Configure `Solar System/Settings.h`:
 
-Currently, the simulation contains only the Sun, Earth and Mars.
+- Key bindings, camera speed/sensitivity
+- Window/viewport and clip planes
+- Planet scales and rotation speeds
+- Kepler epoch (`epochJD_J2000`), days/second (`keplerDaysPerSecond`), and AU scale (`keplerAUScale`)
 
-## Shaders and lighting
-
-For the current minimal build:
-
-- `Resources/Shaders/default.vert`, `Resources/Shaders/default.frag`: basic per-pixel lighting (ambient + diffuse + subtle rim). Used for Earth and Mars.
-- `Resources/Shaders/noLight.vert`, `Resources/Shaders/noLight.frag`: unlit textured draw. Used for the Sun and skybox.
-
-Advanced Earth/overlay shaders have been removed for this milestone to keep the project intentionally unfinished for mid-evaluation.
-
-## Dependencies
-
-- C++17
-- OpenGL 3.3 (or later)
-- CMake 3.16+ (build system)
-- A C++ toolchain:
-  - Windows: MinGW-w64 (preferred) or VS Build Tools
-  - Linux/macOS: system compiler (gcc/clang)
-
-## Build and Run with CMake (cross‑platform)
+## Build (CMake)
 
 Clone and build:
 
 ```bash
-
 # Windows (MinGW)
 cmake -S . -B build -G "MinGW Makefiles"
-cmake --build build --parallel
+cmake --build build --config Release -j
 
 # Linux/macOS
 cmake -S . -B build
 cmake --build build -j
 ```
 
-Run from the build directory so resources resolve correctly:
+Run from the build directory so relative resource paths resolve:
 
 ```bash
 cd build
@@ -96,37 +63,68 @@ cd build
 
 Notes
 
-- CMake downloads/uses GLFW automatically and links GLAD; GLM and stb are vendored.
-- The CMake script copies `Resources/` next to the build so the app’s relative paths work.
+- CMake fetches GLFW; GLAD, GLM, and stb are vendored in `Dependencies/`
+- Post‑build step copies `Resources/` next to the executable
 
 ## Repository layout
 
 ```
-Dependencies/         # GLAD, GLFW (fetched), GLM, stb
-Resources/            # Meshes, Shaders, Textures
-Solar System/         # Source code (.h/.cpp), Visual Studio project (optional)
-CMakeLists.txt        # CMake build entry
+Dependencies/                  # GLAD, GLFW (fetched), GLM, stb
+Resources/
+  Shaders/                     # default, earth, overlay, text, orbit
+  Meshes/                      # sphere.obj
+  Textures/                    # planets, rings, skybox, etc.
+Solar System/                  # Source code (.h/.cpp)
+CMakeLists.txt                 # Build entry
 ```
 
 ## Team contributions (3 members)
 
-- Ujjwal Singh (S20230010245): Rendering infrastructure and resources
+### Ujjwal Singh (S20230010245) — Rendering & GPU resources
 
-  - Implemented OpenGL resource wrappers and draw primitives
-  - Files: `Solar System/ShaderProgram.*`, `Solar System/Mesh.*`, `Solar System/Texture.*`, `Solar System/Actor.*`
-  - Shaders: `Resources/Shaders/default.*`, `Resources/Shaders/noLight.*`
+- Engine wrappers and draw path:
+  - `Solar System/ShaderProgram.h`, `Solar System/ShaderProgram.cpp`
+  - `Solar System/Mesh.h`, `Solar System/Mesh.cpp`
+  - `Solar System/Texture.h`, `Solar System/Texture.cpp`
+  - `Solar System/Actor.h`, `Solar System/Actor.cpp`
+  - `Solar System/objload.h`, `Solar System/objload.cpp`
+- Shaders and effects:
+  - `Resources/Shaders/default.vert`, `Resources/Shaders/default.frag`
+  - `Resources/Shaders/earth.vert`, `Resources/Shaders/earth.frag`
+  - `Resources/Shaders/noLight.vert`, `Resources/Shaders/noLight.frag`
+  - `Resources/Shaders/overlay.vert`, `Resources/Shaders/overlay.frag`
+  - `Resources/Shaders/text.vert`, `Resources/Shaders/text.frag`
+  - `Resources/Shaders/orbit.vert`, `Resources/Shaders/orbit.frag`
+- Utilities and third‑party glue:
+  - `Solar System/stb_image.h`, `Solar System/stb_image.cpp`
 
-- Arun M. (S20230010025): Camera, input, and scene simulation
+### Arun M. (S20230010025) — Camera, input, simulation & orbital mechanics
 
-  - Implemented free-fly camera, input handling, and frame loop
-  - Assembled Sun/Earth/Mars scene and per-frame updates
-  - Files: `Solar System/Camera.*`, `Solar System/Planet.*`, `Solar System/Game.*`, `Solar System/Settings.h`
+- Application loop, input, and scene logic:
+  - `Solar System/Game.h`, `Solar System/Game.cpp`
+  - `Solar System/main.cpp`
+  - Follow‑camera, HUD text rendering, orbit path system
+- Camera system:
+  - `Solar System/Camera.h`, `Solar System/Camera.cpp`
+- Celestial bodies:
+  - `Solar System/Planet.h`, `Solar System/Planet.cpp`
+  - Kepler module: `Solar System/Orbital.h`, `Solar System/Orbital.cpp`
+- Configuration:
+  - `Solar System/Settings.h`
 
-- Saurav Singh (S20230010219): Windowing, build system, and assets integration
-  - Set up GLFW window/context, input surface, and swap chain
-  - Configured CMake, dependency fetching, and resource packaging post-build
-  - Integrated skybox and curated minimal assets (sun/earth/mars/stars)
-  - Files: `Solar System/Window.*`, `CMakeLists.txt`, `Resources/Meshes/sphere.obj`, `Resources/Textures/{sun.jpg, earth.jpg, mars.jpg, stars_milkyway.jpg}`
+### Saurav Singh (S20230010219) — Windowing, build, assets & packaging
+
+- Platform/window + GL context:
+  - `Solar System/Window.h`, `Solar System/Window.cpp`
+- Build system and vendor setup:
+  - `CMakeLists.txt`
+  - `Dependencies/GLAD/*`, `Dependencies/GLFW/*`, `Dependencies/GLM/*`, `Dependencies/stb/*` (integration)
+- Assets & resources:
+  - Skybox and planet textures under `Resources/Textures/`
+  - Sphere mesh: `Resources/Meshes/sphere.obj`
+  - Keyboard diagram and documentation updates
+
+All source and shader files are attributed above; resources (textures/meshes) are curated under Saurav’s integration role.
 
 ## Cleaning up local build artifacts
 
@@ -139,6 +137,6 @@ rmdir /S /Q build     # Windows
 
 ## Credits
 
-Planet textures were retrieved from https://www.solarsystemscope.com/textures/
+Planet textures: `https://www.solarsystemscope.com/textures/`
 
-An OpenGL resource that greatly helped : https://learnopengl.com/
+OpenGL reference: `https://learnopengl.com/`
