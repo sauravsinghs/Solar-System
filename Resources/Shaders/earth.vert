@@ -1,7 +1,4 @@
-// Vertex shader for lit objects (planets, asteroids)
-// - Inputs: position (0), texcoord (1), normal (2)
-// - Outputs: world-space normal and position, plus flipped V texcoord
-// - Uniforms: MVP, modelMatrix, normalMatrix
+// Vertex shader for Earth: outputs world normal/pos; flips V to align equirectangular map
 #version 330 core
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexture;
@@ -17,7 +14,7 @@ uniform mat3 normalMatrix;
 
 void main()
 {
-    textureCoordinate = vec2(aTexture.x, 1.0 - aTexture.y);
+    textureCoordinate = vec2(aTexture.x, 1.0 - aTexture.y); // flip V to correct Earth map orientation
     normal = normalMatrix * aNormal;
     fragmentPosition = vec3(modelMatrix * vec4(aPosition, 1.0));
     gl_Position = MVP * vec4(aPosition, 1.0);
