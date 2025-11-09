@@ -1,4 +1,3 @@
-// Planet: orbit around origin and self-rotation, builds transform each frame.
 #include "Planet.h"
 
 Planet::Planet(float orbitRadius, float scale, float orbitSpeedDegrees, float rotationSpeedDegrees)

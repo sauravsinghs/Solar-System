@@ -47,6 +47,12 @@ inline void ShaderProgram::SendUniform<glm::vec3>(std::string uniformName, const
 }
 
 template<>
+inline void ShaderProgram::SendUniform<glm::vec4>(std::string uniformName, const glm::vec4& value)
+{
+	glUniform4fv(GetUniformID(uniformName), 1, &value[0]);
+}
+
+template<>
 inline void ShaderProgram::SendUniform<int>(std::string uniformName, const int& value)
 {
 	glUniform1i(GetUniformID(uniformName), value);
