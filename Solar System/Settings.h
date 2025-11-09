@@ -4,43 +4,105 @@
 //Settings that can be tweaked.
 namespace settings
 {
+    // Julian date epoch and Sun GM (only JD used for simple mean motion approach)
+    constexpr double epochJD_J2000 = 2451545.0; // 2000-01-01 12:00 TT
+    // Obliquity (axial tilt) per planet (degrees)
+    constexpr float obliqMercury = 0.03f;
+    constexpr float obliqVenus   = 177.36f; // retrograde
+    constexpr float obliqEarth   = 23.44f;
+    constexpr float obliqMars    = 25.19f;
+    constexpr float obliqJupiter = 3.12f;
+    constexpr float obliqSaturn  = 26.73f;
+    constexpr float obliqUranus  = 97.77f;  // retrograde
+    constexpr float obliqNeptune = 28.32f;
 	//Directory paths.
 	const std::string texturesPath = "..\\Resources\\Textures\\";
 	const std::string meshesPath = "..\\Resources\\Meshes\\";
 	const std::string shadersPath = "..\\Resources\\Shaders\\";
 
-    
-
 	//Simulation settings.
 	//Lighting.
-	constexpr glm::vec3 sunlightColor = {1.f,1.f,1.f}; // The color that the sun casts on the planets.
-	constexpr glm::vec3 ambientColor = {0.05f,0.05f,0.05f}; // The ambient color of all planets.
+	constexpr glm::vec3 sunlightColor = {1.f,1.f,1.f};//The color that the sun casts on the planets.
+	constexpr glm::vec3 ambientColor = {0.05f,0.05f,0.05f};//The ambient color of all planets (except earth).
+	constexpr glm::vec3 earthAmbientColor = {0.7f,0.7f,0.7f};//The ambient color of the earth.
+	constexpr float earthSpecularStrength = 1.5f;//Controls the strength of the specular of the ware's surface of earth.
+	constexpr float earthSpecularShininess = 4;	//Controls the shininess of the water's surface of earth (powers of 2).
 	//Radiuses.
 	constexpr float earthOrbitRadius = 300.0f;		//The radius of the earth around the sun (other planet's radiuses are scaled based on this value).
-    
+	constexpr float mercuryOrbitRadius = earthOrbitRadius * 0.6f;
+	constexpr float venusOrbitRadius = earthOrbitRadius * 0.8f;
 	constexpr float marsOrbitRadius = earthOrbitRadius * 1.3f;
+	constexpr float jupiterOrbitRadius = earthOrbitRadius * 2.0f;
+	constexpr float saturnOrbitRadius = earthOrbitRadius * 3.0f;
+	constexpr float uranusOrbitRadius = earthOrbitRadius * 3.8f;
+	constexpr float neptuneOrbitRadius = earthOrbitRadius * 4.3f;
 
 	//Scales.
-	constexpr float sunScale = 100.f;				
+	constexpr float sunScale = 80.f;				
 	constexpr float earthScale = 10.f;				//The scale of the earth (other planet's scales are adjusted based on this value).
-    
+	constexpr float mercuryScale = earthScale * 0.3f;
+	constexpr float venusScale = earthScale * 0.9f;	
 	constexpr float marsScale = earthScale * 0.5f;	
+	constexpr float jupiterScale = earthScale * 5.0f;
+	constexpr float saturnScale = earthScale * 4.0f;	
+	constexpr float uranusScale = earthScale * 2.5f;	
+	constexpr float neptuneScale = earthScale * 2.3f;
 
 	//Orbit speeds (in degrees per second).
 	constexpr float earthOrbitSpeed = 20.f;	//The number of degrees the earth should travel around its orbit every second (other planet's orbit speeds are adjusted based on this value).
-    
+	constexpr float mercuryOrbitSpeed = earthOrbitSpeed * 4.149f;
+	constexpr float venusOrbitSpeed = earthOrbitSpeed * 1.623f;
 	constexpr float marsOrbitSpeed = earthOrbitSpeed * 0.531f;
+	constexpr float jupiterOrbitSpeed = earthOrbitSpeed * 0.084f;
+	constexpr float saturnOrbitSpeed = earthOrbitSpeed * 0.033f;
+	constexpr float uranusOrbitSpeed = earthOrbitSpeed * 0.011f;
+	constexpr float neptuneOrbitSpeed = earthOrbitSpeed * 0.006f;
 
 	//Rotation Speeds (in degrees per second).
 	constexpr float earthRotationSpeed = 50.f;
 	constexpr float sunRotationSpeed = earthRotationSpeed * 0.037f;	//The number of degrees the earth should rotate around itself every second (other planet's rotation speeds are adjusted based on this value).
-    
+	constexpr float mercuryRotationSpeed = earthRotationSpeed * 17.241f;
+	constexpr float venusRotationSpeed = -earthRotationSpeed * 4.115f;	//Rotates the other way compared to earth.
 	constexpr float marsRotationSpeed = earthRotationSpeed * 0.960f;
+	constexpr float jupiterRotationSpeed = earthRotationSpeed * 2.403f;
+	constexpr float saturnRotationSpeed = earthRotationSpeed * 2.183f;
+	constexpr float uranusRotationSpeed = -earthRotationSpeed * 1.412f;	//Rotates the other way compared to earth.
+	constexpr float neptuneRotationSpeed = earthRotationSpeed * 1.501f;
 
 	//Time settings.
 	constexpr float timeAdjustSpeed = 0.1f;
+	// Kepler time scale (~days advanced per real second)
+	constexpr float keplerDaysPerSecond = 30.0f;
+	// Scene units per 1 AU for Keplerian orbits (chosen to keep Mercury > Sun radius and Neptune < far plane)
+	constexpr float keplerAUScale = 326.0f;
 
-    
+	// Moon (approximate, scaled to simulation units)
+	constexpr float moonOrbitRadius = earthScale * 3.5f; // keep near Earth in this simulation scale
+	constexpr float moonScale = earthScale * 0.27f;
+	constexpr float moonOrbitSpeed = earthOrbitSpeed * 13.0f; // ~13x per Earth year (approximate monthly)
+	constexpr float moonRotationSpeed = moonOrbitSpeed; // tidally locked approximation
+
+	// Saturn rings (relative to Saturn scale)
+	constexpr float saturnRingInner = 1.2f; // inner radius multiplier of Saturn radius
+	constexpr float saturnRingOuter = 2.4f; // outer radius multiplier of Saturn radius
+	constexpr float saturnRingTiltDegrees = 26.7f; // axial tilt
+	constexpr float saturnRingAngularSpeed = 25.0f; // degrees per second for animated particle-like motion
+	constexpr float saturnRingDifferential = 0.8f; // inner faster than outer (0..1)
+
+	// Venus atmosphere
+	constexpr float venusAtmosphereScale = 1.05f; // slightly larger than Venus sphere (more visible rim)
+	constexpr float venusAtmosphereRotation = -earthRotationSpeed * 1.0f; // super-rotation approximation
+
+	// Asteroid belt (between Mars and Jupiter, approximate)
+	constexpr int asteroidCount = 4000;
+	constexpr float asteroidBeltInner = marsOrbitRadius + marsScale * 8.0f; // wider safe margin from Mars
+	constexpr float asteroidBeltOuter = jupiterOrbitRadius - jupiterScale * 2.0f; // safe margin from Jupiter
+	constexpr float asteroidBeltTiltDegrees = 2.0f; // small inclination
+	constexpr float asteroidBeltHalfThickness = earthScale * 1.5f; // vertical half-thickness
+	constexpr float asteroidMinScale = earthScale * 0.08f;
+	constexpr float asteroidMaxScale = earthScale * 0.22f;
+	constexpr float asteroidBaseAngularSpeed = earthOrbitSpeed * 0.35f; // inner band speed benchmark
+	constexpr float asteroidSpeedExponent = 1.5f; // Kepler-like
 
 	//Keyboard bindings (US layout, use https://www.glfw.org/docs/3.3/group__keys.html for looking up the key's values).
 	constexpr int forwardKey = 87;		//W
@@ -53,6 +115,8 @@ namespace settings
 	constexpr int wireframeModeKey = 84;	//T
 	constexpr int cameraSpeedupKey = 86;	//V
 	constexpr int cameraSlowdownKey = 67;//C
+	constexpr int cameraCycleKey = 70;     //F
+	constexpr int orbitToggleKey = 79;     //O
 	constexpr int pauseKey = 80;			//P
 	constexpr int timeSpeedupKey = 334;	//Keypad ADD
 	constexpr int timeSlowdownKey = 333;	//Keypad SUBTRACT
